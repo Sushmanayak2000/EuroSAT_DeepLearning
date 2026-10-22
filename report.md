@@ -5,7 +5,7 @@
 - **Authors:** Patrick Helber, Benjamin Bischke, Andreas Dengel and Damian Borth
 - **Title:** EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification
 - **Year:** 2019
-- **Link:** https://arxiv.org/abs/1709.00029
+- **Link:** https://zenodo.org/records/7711810
 
 ## Task
 
