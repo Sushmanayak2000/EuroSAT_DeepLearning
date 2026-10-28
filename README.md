@@ -31,6 +31,13 @@ The baseline model uses ResNet-50 pretrained on ImageNet.
 
 The final fully connected layer is replaced to classify the images into 10 EuroSAT classes.
 
+## Work Distribution
+
+- **Part A – How Many Labels Do We Need?**: Sushma
+- **Part B – Improvement to the Baseline**: Ishika Thakur
+
+Both team members collaborate on the baseline reproduction, dataset preparation, and final report.
+
 ## Experimental Setup
 
 - Training-validation-test split: 72% / 8% / 20%
