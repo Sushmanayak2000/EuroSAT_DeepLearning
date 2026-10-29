@@ -58,10 +58,11 @@ The notebook also includes example images from each class and a class-distributi
 The paper reports an accuracy of 98.57% for the ImageNet-pretrained ResNet-50 model on EuroSAT RGB using an 80/20 class-wise training-test split (Table III, Page 5). Our baseline achieved a mean test accuracy of 96.32% ± 0.04% across three runs. The results differ, in part, because our experiment uses a stratified 72/8/20 train-validation-test split rather than the paper's 80/20 training-test split. The paper also leaves several training details unspecified, which required us to make and document our own implementation choices.
 ## 4 · Your improvement (20 %)
 
-- **Idea:** [what you change]
-- **Why it should help:** [the reasoning: a weakness of the baseline you observed, a method from the course or from another paper]
-- **Expected effect:** [what you expect to see, and on which metric]
+Because we observe that our ResNet-50 baseline achieves 96.32% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
 
+- - **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
+- **Why it should help:** ResNet-18 is a smaller network that requires fewer parameters and less computation. ImageNet pretraining provides useful visual features that may allow it to classify EuroSAT images accurately despite its smaller size.
+- **Expected effect:** We expect fewer parameters and shorter training time while maintaining comparable test accuracy and macro-F1. We will evaluate both models across three random seeds.
 ## 5 · Experiments (part of 20 % and 15 %)
 
 - **Design:** one change at a time; the same data splits, the same budget; at least three seeds per setting.
