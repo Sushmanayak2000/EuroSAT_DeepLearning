@@ -60,7 +60,7 @@ The paper reports an accuracy of 98.57% for the ImageNet-pretrained ResNet-50 mo
 
 Because we observe that our ResNet-50 baseline achieves 96.32% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
 
-- - **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
+- **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
 - **Why it should help:** ResNet-18 is a smaller network that requires fewer parameters and less computation. ImageNet pretraining provides useful visual features that may allow it to classify EuroSAT images accurately despite its smaller size.
 - **Expected effect:** We expect fewer parameters and shorter training time while maintaining comparable test accuracy and macro-F1. We will evaluate both models across three random seeds.
 ## 5 · Experiments (part of 20 % and 15 %)
