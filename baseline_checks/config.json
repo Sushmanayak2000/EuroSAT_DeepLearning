@@ -1,0 +1,21 @@
+{
+  "architecture": "resnet50",
+  "weights": "IMAGENET1K_V2",
+  "seed": 42,
+  "image_size": 64,
+  "training_images": 21600,
+  "test_images": 5400,
+  "batch_size": 64,
+  "head_epochs": 3,
+  "finetune_epochs": 15,
+  "head_lr": 0.01,
+  "finetune_lr": 0.0001,
+  "optimizer": "AdamW",
+  "weight_decay": 0.0001,
+  "checkpoint_rule": "final epoch; duration fixed before test evaluation",
+  "duration_reason": "64px validation run: best overall epoch 18",
+  "gpu": "Tesla T4",
+  "torch_version": "2.11.0+cu130",
+  "torchvision_version": "0.26.0+cu130",
+  "parameters": 23528522
+}
