@@ -41,6 +41,20 @@ Investigates training on the full 80% development set.
 Test accuracy: 97.02%.
 Remaining gap to the paper’s 98.57%: 1.55 percentage points.
 
+## Optimiser choice: AdamW
+
+Both notebooks use AdamW with weight decay 0.0001.
+The learning rate is 0.01 for head training and 0.0001
+for full-network fine-tuning.
+
+AdamW was an implementation choice because it combines
+adaptive parameter updates with decoupled weight decay
+for regularisation. It was not a confirmed optimiser
+setting from the paper.
+
+We have not compared AdamW with SGD with momentum,
+so we do not claim that AdamW is superior.
+
 ## Interpretation
 
 These are single-seed baseline investigations, separate from
