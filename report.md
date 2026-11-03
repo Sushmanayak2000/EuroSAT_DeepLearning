@@ -11,7 +11,7 @@
 
 ## Abstract
 
-[Four or five sentences: the task, the paper, the data, your reproduced result next to the published one, your improvement and its measured effect (mean ± spread).]
+Land use and land cover (LULC) classification from satellite imagery is an important task in remote sensing, enabling the automated identification of different geographical and environmental features. This project reproduces and evaluates a ResNet-50 transfer learning baseline based on Helber et al. (2019), who introduced the EuroSAT dataset and reported 98.57% classification accuracy using RGB satellite images. The experiments use the EuroSAT RGB dataset, consisting of 27,000 labelled images across ten land cover classes, with a fixed 72% training, 8% validation, and 20% test split and three random seeds to assess reproducibility. For Part A, an ImageNet-pretrained ResNet-50 is trained using a two-stage strategy involving classification head training followed by full-network fine-tuning; for Part B, ResNet-18 is evaluated as a smaller alternative to investigate the trade-off between classification performance and computational efficiency. The reproduced baseline and the ResNet-18 model are compared with the published result of 98.57%, using test accuracy, mean and standard deviation across random seeds, parameter count, and training time to assess their performance and efficiency.
 
 ## 1 · The paper and the task (research understanding, part of 15 %)
 
@@ -57,7 +57,15 @@ The notebook also includes example images from each class and a class-distributi
 
 The paper reports an accuracy of 98.57% for the ImageNet-pretrained ResNet-50 model on EuroSAT RGB using an 80/20 class-wise training-test split (Table III, Page 5). Our baseline achieved a mean test accuracy of 96.32% ± 0.04% across three runs. The results differ, in part, because our experiment uses a stratified 72/8/20 train-validation-test split rather than the paper's 80/20 training-test split. The paper also leaves several training details unspecified, which required us to make and document our own implementation choices.
 ## 4 · Your improvement (20 %)
+### Part A: Effect of Pretraining with Limited Training Data
 
+Since the paper's learning curve is based on training ResNet-50 from scratch, we expect ImageNet-pretrained ResNet-50 to perform better with limited EuroSAT training data, with the benefit of pretraining becoming less pronounced as the training data increases.
+
+- **Idea:** Fine-tune ImageNet-pretrained ResNet-50 using a few selected training sizes, keeping the test set fixed across all experiments and comparing the results with the paper's from-scratch learning curve.
+- **Why it should help:** ImageNet pretraining provides useful visual features that may help the model learn EuroSAT classes more effectively when only a limited amount of labeled training data is available.
+- **Expected effect:** We expect pretrained ResNet-50 to achieve higher classification accuracy at smaller training sizes, with the performance gap decreasing as the training data increases. We will evaluate the model across multiple random seeds.
+  
+### Part B: Model Efficiency and Classification Performance
 Because we observe that our ResNet-50 baseline achieves 96.32% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
 
 - **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
