@@ -20,7 +20,17 @@ The recovered revision contains the resizing code and partial
 training outputs. Final results are documented separately in
 retained screenshots/output records. The 224 × 224 checkpoint
 and original CSV files were lost when the runtime ended.
+## Retained output: 224 × 224 experiment
 
+Single run using seed 42. Best validation accuracy: 98.29%.
+Total runtime: 62.41 minutes.
+Best overall epoch: 12 (fine-tuning epoch 9).
+
+The screenshot preserves the completed console output.
+The checkpoint and original CSV files were lost after the
+Colab runtime ended; test accuracy is unavailable.
+
+![224 × 224 experiment output](resize_224_seed42_output.png)
 ## 02_ResNet50_Full80_Training_and_Evaluation.ipynb
 
 Investigates training on the full 80% development set.
