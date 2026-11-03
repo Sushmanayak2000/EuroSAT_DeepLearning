@@ -1,38 +1,49 @@
-Both notebooks in this folder investigate the shared
-ResNet-50 baseline following the professor's feedback.
+# Baseline Checks
+Conducted after the professor’s feedback.
 
-## Experiments
+## 01_ResNet50_Training_Length_and_Resize.ipynb
 
-| Experiment | Evaluation | Accuracy | Seed |
-|---|---|---:|---:|
-| Longer training, 64 × 64 | Validation | 97.87% | 42 |
-| Resizing to 224 × 224 | Validation | 98.29% | 42 |
-| Full 80% training, 64 × 64 | Test | 97.02% | 42 |
+Investigates training duration and input image size using the
+existing 72% training, 8% validation and 20% test split.
 
-The training-and-resizing notebook contains the first two
-experiments. The full-training notebook contains the third.
+- Extends fine-tuning beyond the original seven epochs.
+- Uses early stopping with patience 5 and a maximum of 30
+  fine-tuning epochs.
+- Tests resizing inputs from 64 × 64 to 224 × 224.
+- Uses seed 42 and validation accuracy for checkpoint selection.
 
-Longer training used early stopping with patience 5 and
-a maximum of 30 fine-tuning epochs.
+Recorded results:
+- 64 × 64: 97.87% validation accuracy; 10.95 minutes.
+- 224 × 224: 98.29% validation accuracy; 62.41 minutes.
 
-The full-80% experiment used 3 head-training epochs and
-15 fine-tuning epochs, selected from the earlier 64 × 64
-validation experiment.
+The recovered revision contains the resizing code and partial
+training outputs. Final results are documented separately in
+retained screenshots/output records. The 224 × 224 checkpoint
+and original CSV files were lost when the runtime ended.
 
-Resizing increased total runtime from 10.95 to 62.41 minutes.
-We retained 64 × 64 inputs for computational efficiency.
+## 02_ResNet50_Full80_Training_and_Evaluation.ipynb
 
-The full-80% test result remains 1.55 percentage points below
-the paper's reported 98.57%. Validation and test results
+Investigates training on the full 80% development set.
+
+- Combines the previous training and validation sets:
+  21,600 training images.
+- Keeps the same 5,400 test images.
+- Uses 64 × 64 inputs and seed 42.
+- Trains the classification head for three epochs, then
+  fine-tunes the full network for fifteen epochs.
+- Fixes training duration using the earlier 64 × 64 validation
+  experiment; does not use validation-based early stopping.
+- Saves configuration, splits, training history, test metrics
+  and predictions.
+- Generates a confusion matrix and three river/highway
+  misclassification examples.
+
+Test accuracy: 97.02%.
+Remaining gap to the paper’s 98.57%: 1.55 percentage points.
+
+## Interpretation
+
+These are single-seed baseline investigations, separate from
+the three-seed architecture comparison in Part B.
+Validation and test accuracies measure different sets and
 should not be compared directly.
-
-## Error analysis
-
-The full-80% model misclassified:
-- 3 River images as Highway
-- 8 Highway images as River
-
-## Retained evidence
-
-The 224 × 224 console output was retained, but its checkpoint
-and original CSV files were lost when the Colab runtime ended.
