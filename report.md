@@ -56,6 +56,32 @@ The notebook also includes example images from each class and a class-distributi
 | Overall classification accuracy | 98.57% | 96.32% ± 0.04% |
 
 The paper reports an accuracy of 98.57% for the ImageNet-pretrained ResNet-50 model on EuroSAT RGB using an 80/20 class-wise training-test split (Table III, Page 5). Our baseline achieved a mean test accuracy of 96.32% ± 0.04% across three runs. The results differ, in part, because our experiment uses a stratified 72/8/20 train-validation-test split rather than the paper's 80/20 training-test split. The paper also leaves several training details unspecified, which required us to make and document our own implementation choices.
+
+### Baseline checks following feedback
+
+The following checks investigated possible causes of the initial gap. Each used seed 42 only; these results cannot establish consistency across seeds.
+
+| Check | Change | Seed | Validation accuracy | Test accuracy | Time per run |
+|---|---|---:|---|---|---|
+| Longer training | 64 × 64; up to 30 fine-tuning epochs, early stopping with patience 5 | 42 | 97.87% | Unavailable | 10.95 min |
+| Resizing | 224 × 224 with the longer-training procedure | 42 | 98.29% | Unavailable | 62.41 min |
+| Full 80% training | Training and validation combined; 64 × 64; 3 head + 15 fine-tuning epochs | 42 | N/A: validation included in training | 97.02% | Not yet retrieved |
+
+The earlier checks’ test accuracies are unavailable because their checkpoints were not retained. The retained screenshots and notebook outputs document the available results.
+
+Resizing increased validation accuracy by 0.42 percentage points, but increased runtime from approximately 11 to 62 minutes. We therefore retained 64 × 64 inputs. Following the professor’s approval, the original presentation baseline remains fixed for Parts A and B; these checks are reported separately.
+
+### Deviations and remaining gap
+
+| Deviation from the paper | Reason and limitation |
+|---|---|
+| 72/8/20 split instead of 80/20 | Reserves an independent validation set for checkpoint selection; fewer images are used for training. |
+| AdamW | Provides adaptive updates and decoupled weight decay. The paper does not state its optimiser; no comparison with SGD was performed. |
+| Three head epochs, seven fine-tuning epochs; batch size 64 | Implementation choices where the paper does not specify settings; retained as the fixed comparison budget. |
+| Native 64 × 64 network inputs | Resizing is not clearly specified in the paper. Our resizing check increased computational cost substantially. |
+| ImageNet normalisation without additional augmentation | Explicit implementation choices where the paper does not clearly specify the procedure. |
+
+The full-80% run achieved 97.02% test accuracy, leaving a gap of **1.55 percentage points** to the paper’s 98.57%. Our checks suggest that training duration and input resolution can affect performance. They do not isolate all causes of the remaining gap, and validation scores cannot be compared directly with the paper’s test score.
 ## 4 · Your improvement (20 %)
 ### Part A: Effect of Pretraining with Limited Training Data
 
