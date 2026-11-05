@@ -92,7 +92,7 @@ Since the paper's learning curve is based on training ResNet-50 from scratch, we
 - **Expected effect:** We expect pretrained ResNet-50 to achieve higher classification accuracy at smaller training sizes, with the performance gap decreasing as the training data increases. We will evaluate the model across multiple random seeds.
   
 ### Part B: Model Efficiency and Classification Performance
-Because we observe that our ResNet-50 baseline achieves 96.32% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
+Because we observe that our ResNet-50 baseline achieves 96.64% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
 
 - **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
 - **Why it should help:** ResNet-18 is a smaller network that requires fewer parameters and less computation. ImageNet pretraining provides useful visual features that may allow it to classify EuroSAT images accurately despite its smaller size.
