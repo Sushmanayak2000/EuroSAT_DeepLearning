@@ -53,7 +53,7 @@ The notebook also includes example images from each class and a class-distributi
 
 | | Paper | Ours (mean ± spread, n seeds) |
 |---|---|---|
-| Overall classification accuracy | 98.57% | 96.32% ± 0.04% |
+| Overall classification accuracy | 98.57% | 96.64% ± 0.27|
 
 The paper reports an accuracy of 98.57% for the ImageNet-pretrained ResNet-50 model on EuroSAT RGB using an 80/20 class-wise training-test split (Table III, Page 5). Our baseline achieved a mean test accuracy of 96.32% ± 0.04% across three runs. The results differ, in part, because our experiment uses a stratified 72/8/20 train-validation-test split rather than the paper's 80/20 training-test split. The paper also leaves several training details unspecified, which required us to make and document our own implementation choices.
 
