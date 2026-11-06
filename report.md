@@ -21,34 +21,37 @@ Land use and land cover (LULC) classification from satellite imagery is an impor
 - **Their main result:** The authors report a classification accuracy of 98.57% using an ImageNet-pretrained ResNet-50 model on the RGB dataset (Table III).
 
 ## 2 · The data 
-
+The experiments use the RGB version of the EuroSAT dataset introduced by Helber et al. (2019). It contains 27,000 labelled satellite image patches covering ten land-use and land-cover classes. Each image has a spatial resolution of 64 × 64 pixels and three RGB channels.
 | | |
 |---|---|
 | Source and version | Official EuroSAT RGB dataset from Zenodo: https://zenodo.org/records/7711810. Downloaded for this project |
 | Licence | MIT Licence |
 | Size | 27,000 images, each with dimensions 64 × 64 pixels and 3 RGB channels |
-| Classes or targets | 10 land-use and land-cover classes: AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial, Pasture, PermanentCrop, Residential, River, and SeaLake. The class distribution is examined using a bar chart in the notebook |
-| Splits | Stratified train-validation-test split: 19,440 training images (72%), 2,160 validation images (8%), and 5,400 test images (20%). The split preserves class proportions |
+| Classes or targets | 10 land-use and land-cover classes: AnnualCrop, Forest, HerbaceousVegetation, Highway, Industrial, Pasture, PermanentCrop, Residential, River, and SeaLake.|
+| Splits | Stratified train-validation-test split: 19,440 training images (72%), 2,160 validation images (8%), and 5,400 test images (20%).|
 | Preprocessing | Images are loaded as RGB and converted to PyTorch tensors. ImageNet mean and standard deviation are used for channel-wise normalisation. Original image dimensions are retained. |
 | Leakage checks | Checked for unreadable images, unexpected image dimensions or colour modes, and exact duplicate images. Verified that train, validation, and test splits have no overlapping image paths. The split was saved for reproducibility |
 | Shared with Biomedical Image Analysis? | No |
 
-The notebook also includes example images from each class and a class-distribution bar chart. Image inspection revealed potential visual challenges, including cloud cover and similarities between some land-cover categories. These observations will be considered during error analysis.
+The dataset was divided using a stratified random split rather than a geographic or time-based split. The same saved split was used for the baseline and the subsequent experiments to maintain consistency. The validation set was used during model development and checkpoint selection, while the test set was kept separate for final evaluation.
+
+The notebook also includes representative image samples from the ten classes and a class-distribution bar chart. Visual inspection shows that some land-cover categories can be visually similar, which may make classification more challenging. These observations provide context for the error analysis in Section 6.
 
 ## 3 · Reproducing the baseline (part of 15 %, and 25 % implementation)
 
 **The recipe:** read the paper (or its code) like a recipe. One row per ingredient; leave nothing empty: if the paper does not say it, write "not stated" and what you chose.
 
+The aim of this stage was to reproduce the ResNet-50 classification approach described by Helber et al. (2019) using the EuroSAT RGB dataset. The original paper was used as the reference for the model architecture, training procedure and evaluation. Where implementation details were not specified, we selected and documented our own settings.
 | | The paper says | Where (page, table, code) | What we use |
 |---|---|---|---|
 | Data: version, split |EuroSAT RGB dataset, 80/20 training-test split applied class-wise| Section IV-A, Page 5|EuroSAT RGB, stratified 72/8/20 train-validation-test split |
 | Model: layers, sizes, pretrained? |ResNet-50 pretrained on ILSVRC-2012 (ImageNet) | Table III, Page 5, Section IV-A, Page 6| ImageNet-pretrained ResNet-50, final fully connected layer replaced with 10 output classes|
-| Training: optimiser, learning rate, schedule | First train the last layer with LR 0.01, then fine-tune the entire network with LR between 0.001 and 0.0001. Optimiser and schedule not stated| Section IV-A, Page 6| AdamW; head LR 0.01, full-network fine-tuning LR 0.0001|
+| Training: optimiser, learning rate, schedule | First train the last layer with LR 0.01, then fine-tune the entire network with LR between 0.001 and 0.0001. Optimiser and schedule not stated| Section IV-A, Page 6| AdamW; Two-stage training: classification-head training with a LR of 0.01, followed by full-network fine-tuning with a LR of 0.0001.|
 | Training: epochs, batch size |Not stated|Section IV-A, Page 6| 3 epochs for head training, 7 epochs for fine-tuning; batch size 64|
 | Augmentation and preprocessing | RGB images formed from bands B04, B03, B02. Further preprocessing and augmentation not stated| Section IV-A, Page 5| Tensor conversion and ImageNet mean/std normalization; no additional augmentation|
 | Metric, and how it was averaged |Overall classification accuracy; averaging across seeds not stated |Section IV-A, Page 5; Table III, Page 5 | Test accuracy, macro-precision, macro-recall, and macro-F1; mean ± standard deviation across 3 seeds |
 
-- **Setup:** The experiment was implemented in PyTorch using Google Colab with a CUDA T4 GPU. The ResNet-50 model was initialized with ImageNet-pretrained weights. The dataset was divided into training, validation, and test subsets using a stratified 72/8/20 split. The validation set was used to select the best checkpoint, while the test set was reserved for final evaluation. The experiment was repeated with three random seeds: 42, 43, and 44
+- **Setup:** The baseline was implemented using PyTorch in Google Colab with a CUDA T4 GPU. An ImageNet-pretrained ResNet-50 was used, with its final classification layer modified to predict the ten EuroSAT classes.The dataset was divided into fixed, stratified training, validation and test subsets using a 72/8/20 split. The validation set was used for model selection and checkpoint selection, while the test set was kept separate for final evaluation.The experiment was repeated using three random seeds: 42, 43 and 44. The same data split and training configuration were maintained across the runs to support a consistent comparison.
 - **What the paper did not say,** and what you chose instead: The paper does not specify the optimizer, number of epochs, batch size, data augmentation, or validation set. We chose AdamW as the optimizer, trained the classification head for 3 epochs and the full network for 7 epochs, and used a batch size of 64. No additional data augmentation was applied. A validation subset was taken from the training data, and the test set was kept separate. These choices were kept fixed across the three runs.
 
 | | Paper | Ours (mean ± spread, n seeds) |
@@ -67,9 +70,11 @@ The following checks investigated possible causes of the initial gap. Each used 
 | Resizing | 224 × 224 with the longer-training procedure | 42 | 98.29% | Unavailable | 62.41 min |
 | Full 80% training | Training and validation combined; 64 × 64; 3 head + 15 fine-tuning epochs | 42 | N/A: validation included in training | 97.02% | Not yet retrieved |
 
-The earlier checks’ test accuracies are unavailable because their checkpoints were not retained. The retained screenshots and notebook outputs document the available results.
+The test accuracies for the longer-training and resizing checks were unavailable because their checkpoints were not retained. Therefore, their validation results are reported separately and are not treated as test performance.
 
-Resizing increased validation accuracy by 0.42 percentage points, but increased runtime from approximately 11 to 62 minutes. We therefore retained 64 × 64 inputs. Following the professor’s approval, the original presentation baseline remains fixed for Parts A and B; these checks are reported separately.
+Resizing the images to 224 × 224 increased validation accuracy from 97.87% to 98.29%, a difference of 0.42 percentage points. However, the runtime increased from approximately 11 minutes to 62 minutes per run. Based on this trade-off, we retained the original 64 × 64 input resolution.
+
+The full-80% training check achieved 97.02% test accuracy. This was an exploratory check rather than a replacement for the original baseline. The original baseline configuration was retained for the subsequent individual improvements.
 
 ### Deviations and remaining gap
 
@@ -85,11 +90,12 @@ The full-80% run achieved 97.02% test accuracy, leaving a gap of **1.55 percenta
 ## 4 · Your improvement (20 %)
 ### Part A: Effect of Pretraining with Limited Training Data
 
-Since the paper's learning curve is based on training ResNet-50 from scratch, we expect ImageNet-pretrained ResNet-50 to perform better with limited EuroSAT training data, with the benefit of pretraining becoming less pronounced as the training data increases.
+Since the paper's learning curve is based on training ResNet-50 from scratch, we investigate how ImageNet-pretrained ResNet-50 performs with limited EuroSAT training data. We expect pretraining to provide an advantage when only a small amount of labelled training data is available, with the performance difference becoming less pronounced as the training data increases.
 
-- **Idea:** Fine-tune ImageNet-pretrained ResNet-50 using a few selected training sizes, keeping the test set fixed across all experiments and comparing the results with the paper's from-scratch learning curve.
-- **Why it should help:** ImageNet pretraining provides useful visual features that may help the model learn EuroSAT classes more effectively when only a limited amount of labeled training data is available.
-- **Expected effect:** We expect pretrained ResNet-50 to achieve higher classification accuracy at smaller training sizes, with the performance gap decreasing as the training data increases. We will evaluate the model across multiple random seeds.
+- **Idea:** Fine-tune ImageNet-pretrained ResNet-50 using five training-data proportions (10%, 30%, 50%, 70%, and 90%), keeping the validation and test sets fixed, and compare the results with the paper's scratch-trained learning curve.
+- **Why it should help:** ImageNet pretraining provides useful visual features that may help the model recognise EuroSAT land-use and land-cover classes more effectively when only a limited amount of labelled training data is available.
+- **Expected effect:** We expect the pretrained ResNet-50 to achieve strong classification accuracy with smaller training-data proportions, with accuracy improving as more training data becomes available. We also expect the performance difference compared with the paper's scratch-trained learning curve to become smaller at higher training-data proportions. We evaluate the model using three random seeds.
+- **Achieved result:** The ImageNet-pretrained ResNet-50 achieved a mean test accuracy of 90.07% with 10% of the training data, increasing to 96.31% with 90% of the training data, averaged across three random seeds.
   
 ### Part B: Model Efficiency and Classification Performance
 Because we observe that our ResNet-50 baseline achieves 96.64% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
@@ -99,30 +105,66 @@ Because we observe that our ResNet-50 baseline achieves 96.64% accuracy but uses
 - **Expected effect:** We expect fewer parameters and shorter training time while maintaining comparable test accuracy and macro-F1. We will evaluate both models across three random seeds.
 ## 5 · Experiments (part of 20 % and 15 %)
 
-- **Design:** one change at a time; the same data splits, the same budget; at least three seeds per setting.
+- **Design:** The shared baseline used an ImageNet-pretrained ResNet-50 trained on the full training partition (19,440 images). For Part A, the effect of training-data size was evaluated using five proportions of the original training partition: 10%, 30%, 50%, 70% and 90%. The corresponding training sizes were 1,944, 5,832, 9,720, 13,608 and 17,496 images.
 
+The same validation set (2,160 images) and test set (5,400 images) were maintained across the Part A experiments. Each training-data proportion was evaluated using three random seeds (42, 43 and 44), resulting in 15 experiments. The same two-stage training procedure was applied across the five proportions.
 | Setting | [metric] mean | ± spread | seeds |
 |---|---|---|---|
-| baseline | | | |
-| + [change 1] | | | |
-| + [change 2] | | | |
+|Baseline (full training partition)|96.64|0.27|3|
+|Part A (10% training data)|90.07|0.43|3|
+|Part A (30% training data)|94.10| 0.30|3|
+|Part A (50% training data)|95.02|0.32|3|
+|Part A (70% training data)|95.91|0.27|3|
+|Part A (90% training data)|96.31|0.17|3|
 
-- **Statistical comparison:** [test and result, for example a paired test over seeds or folds (Session 31)]
-- **Test set:** used **once**, for the final models only.
+- **Statistical comparison :** Mean test accuracy and standard deviation were calculated across three random seeds (42, 43 and 44) for the baseline and each Part A training-data proportion. The results were compared descriptively to examine the effect of training-data size on classification performance.
+- **Test set:** The same fixed test set of 5,400 images was used to evaluate each of the five Part A training-data proportions and construct the learning curve. It was not used for training or checkpoint selection; the validation set was used for model selection.
 
 ## 6 · Evaluation and error analysis (15 %)
 
 - [Metrics that fit the task (not only accuracy): confusion matrix, precision, recall, F1, IoU, …]
 - [Where does the model fail? Examples of its most confident mistakes; which classes are confused, and why]
 - [Limitations: what your results do **not** show]
+  
+**6.1 Shared baseline – Evaluation and error analysis**
+
+Metrics: The shared baseline was evaluated using test accuracy, macro-precision, macro-recall and macro-F1. The ImageNet-pretrained ResNet-50 achieved a mean test accuracy of 96.64% ± 0.27 percentage points across three random seeds.
+
+Confusion matrix and errors: The confusion matrix was examined to identify misclassifications between land-use and land-cover categories. Particular attention was given to confusion between River and Highway, which is also reported in the original EuroSAT paper (Figure 8). Three misclassified test images were selected to illustrate these errors.
+
+
+
+**6.2 Part A – Effect of Pretraining with Limited Training Data**
+
+Metrics: In addition to test accuracy, macro-precision, macro-recall and macro-F1 were calculated for each training-data proportion. The results were evaluated across three random seeds.
+
+Results: The mean test accuracy increased from 90.07% ± 0.43 percentage points with 10% of the training data to 96.31% ± 0.17 percentage points with 90% of the training data. This demonstrates that the ImageNet-pretrained ResNet-50 achieved strong classification performance even with a limited number of labelled training images.
+
+Error analysis: Confusion matrices and classification reports were generated for all five training-data proportions to examine class-wise performance and identify misclassifications.
 
 ## 7 · Conclusion
 
 [What you reproduced, what you improved, what you would try next.]
 
+This project investigated deep-learning-based land-use and land-cover classification using the EuroSAT RGB dataset and reproduced a ResNet-50 classification baseline based on the approach presented by Helber et al. (2019). The reproduced baseline achieved a mean test accuracy of 96.64% ± 0.27% across three random seeds, compared with the 98.57% accuracy reported in the original paper.
+
+The experiments further demonstrated the importance of training data availability for classification performance. In the experiments using ImageNet-pretrained ResNet-50, the mean test accuracy increased from 90.07% ± 0.43 percentage points with 10% of the training data to 96.31% ± 0.17 percentage points with 90% of the training data. This indicates that pretraining can provide a strong starting point even when only a limited number of labelled satellite images are available.
+
+The evaluation also highlighted some remaining classification challenges, particularly the confusion between River and Highway classes. This behaviour was also reported in the original EuroSAT paper, suggesting that certain land-cover categories have similar visual characteristics and can be difficult to distinguish.
+
+Overall, the project provided practical experience in reproducing a published deep learning approach, designing controlled experiments, evaluating classification performance and analysing model errors. Although the reproduced results were slightly below those reported in the original paper, the experiments helped identify possible reasons for the performance difference and highlighted the importance of consistent data splits, training configurations and evaluation procedures.
+
+As a next step, further experiments could investigate alternative training strategies, improved image preprocessing and data augmentation techniques to improve classification performance while maintaining computational efficiency.
+
 ## 8 · Use of AI tools (5 %)
 
 [Which tools you used, for what (code, text, debugging), and how you **checked** their output. Be specific.]
+
+ChatGPT (OpenAI) was used as a supplementary tool during the development of this project, mainly for debugging assistance and discussing possible solutions to technical issues encountered during implementation. It was also used to clarify certain PyTorch concepts, understand error messages and explore possible improvements to the experimental setup.
+
+The suggestions provided by ChatGPT were treated as guidance rather than directly accepted solutions. Relevant code changes were reviewed, tested in the notebook and checked against the actual execution results. Model training, experiment execution, result collection and interpretation were carried out and verified by the project team.
+
+No AI tool was used to generate the experimental results or classification metrics.
 
 ## 9 · Reproducibility (part of 25 %)
 
@@ -133,3 +175,14 @@ Because we observe that our ResNet-50 baseline achieves 96.64% accuracy but uses
 ## References
 
 [All papers, data sets, code and websites you used.]
+
+
+[1] P. Helber, B. Bischke, A. Dengel, and D. Borth, "EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification," *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*, vol. 12, no. 7, pp. 2217–2226, 2019. doi: 10.1109/JSTARS.2019.2918242.
+
+[2] P. Helber, B. Bischke, A. Dengel, and D. Borth, "EuroSAT: A Novel Dataset and Deep Learning Benchmark for Land Use and Land Cover Classification," Zenodo, 2019. Available: https://zenodo.org/records/7711810.
+
+[3] K. He, X. Zhang, S. Ren, and J. Sun, "Deep Residual Learning for Image Recognition," in *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 2016, pp. 770–778.
+
+[4] PyTorch, "PyTorch Documentation." Available: https://pytorch.org/docs/stable/index.html.
+
+[5] PyTorch, "Torchvision Models Documentation – ResNet-50." Available: https://pytorch.org/vision/stable/models/generated/torchvision.models.resnet50.html.
