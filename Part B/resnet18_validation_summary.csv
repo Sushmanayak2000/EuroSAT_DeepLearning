@@ -1,0 +1,2 @@
+model,num_seeds,mean_best_val_accuracy,std_best_val_accuracy
+ResNet-18,3,0.9645061728395062,0.004862947918700207

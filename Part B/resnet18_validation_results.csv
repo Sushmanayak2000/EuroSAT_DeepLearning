@@ -1,0 +1,4 @@
+seed,best_val_accuracy,best_val_loss,best_epoch,training_minutes,checkpoint
+42,0.9643518518518519,0.13496644681802503,9,2.821490744749705,/content/drive/MyDrive/EuroSAT_Final_Experiments/Baseline/Checkpoints/resnet18_seed_42.pth
+43,0.9694444444444444,0.16814900402807528,10,2.8597467581431073,/content/drive/MyDrive/EuroSAT_Final_Experiments/Baseline/Checkpoints/resnet18_seed_43.pth
+44,0.9597222222222223,0.17157025513825594,10,2.8030186613400776,/content/drive/MyDrive/EuroSAT_Final_Experiments/Baseline/Checkpoints/resnet18_seed_44.pth
