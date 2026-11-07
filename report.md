@@ -146,6 +146,45 @@ The same validation set (2,160 images) and test set (5,400 images) were maintain
 - **Statistical comparison :** Mean test accuracy and standard deviation were calculated across three random seeds (42, 43 and 44) for the baseline and each Part A training-data proportion. The results were compared descriptively to examine the effect of training-data size on classification performance.
 - **Test set:** The same fixed test set of 5,400 images was used to evaluate each of the five Part A training-data proportions and construct the learning curve. It was not used for training or checkpoint selection; the validation set was used for model selection.
 
+  
+### Part B — ResNet-18 Experiments 
+
+Part B compared ImageNet-pretrained ResNet-18 with the shared ResNet-50
+baseline. Both models used the same 19,440 training images, 2,160
+validation images and 5,400 test images, with the same preprocessing
+and two-stage training schedule. The comparison changed the network
+architecture and its corresponding pretrained weights.
+
+ResNet-18 was trained with seeds 42, 43 and 44. For each seed, the
+checkpoint with the highest validation accuracy was evaluated on
+the held-out test set. Each ResNet-18 result was paired with the
+ResNet-50 result from the same training seed.
+
+| Seed | ResNet-50 test accuracy (%) | ResNet-18 test accuracy (%) | Difference (pp) |
+|---|---:|---:|---:|
+| 42 | 96.4630 | 95.7222 | −0.7408 |
+| 43 | 96.9444 | 95.7593 | −1.1851 |
+| 44 | 96.5000 | 95.7407 | −0.7593 |
+| **Mean** | **96.6358** | **95.7407** | **−0.8951** |
+
+Differences are calculated as ResNet-18 minus ResNet-50. The sample
+standard deviation across seeds was 0.27 percentage points (pp) for
+ResNet-50 and 0.02 pp for ResNet-18.
+
+**Statistical comparison.** A two-sided paired t-test gave
+*t*(2) = −6.17 and *p* = 0.0253. The 95% confidence interval for
+the mean difference was [−1.52, −0.27] pp. The exact Wilcoxon
+signed-rank test gave *p* = 0.25. The observed mean loss of 0.90 pp
+fell within the predefined one-point margin. With three matched
+runs, the confidence interval still allows a loss larger than one point.
+
+**Model size and training time.** ResNet-18 used 11.18 million
+parameters compared with 23.53 million for ResNet-50, a reduction
+of 52.5%. ResNet-18 training took 2.74–2.87 minutes per run.
+Estimating a training speedup requires comparable ResNet-50 timings.
+
+[Part B notebook, per-seed results and comparison figure](Part%20B/)
+
 ## 6 · Evaluation and error analysis (15 %)
 
 - [Metrics that fit the task (not only accuracy): confusion matrix, precision, recall, F1, IoU, …]
