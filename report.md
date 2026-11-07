@@ -97,12 +97,32 @@ Since the paper's learning curve is based on training ResNet-50 from scratch, we
 - **Expected effect:** We expect the pretrained ResNet-50 to achieve strong classification accuracy with smaller training-data proportions, with accuracy improving as more training data becomes available. We also expect the performance difference compared with the paper's scratch-trained learning curve to become smaller at higher training-data proportions. We evaluate the model using three random seeds.
 - **Achieved result:** The ImageNet-pretrained ResNet-50 achieved a mean test accuracy of 90.07% with 10% of the training data, increasing to 96.31% with 90% of the training data, averaged across three random seeds.
   
-### Part B: Model Efficiency and Classification Performance
-Because we observe that our ResNet-50 baseline achieves 96.64% accuracy but uses a relatively large network, we expect replacing it with ImageNet-pretrained ResNet-18 to improve model efficiency by reducing the parameter count by about 50%, while maintaining comparable classification accuracy.
+### Part B — Model Efficiency and Classification Performance (Ishika Thakur)
 
-- **Idea:** Replace ImageNet-pretrained ResNet-50 with ImageNet-pretrained ResNet-18, keeping the data split, preprocessing, and training settings fixed.
-- **Why it should help:** ResNet-18 is a smaller network that requires fewer parameters and less computation. ImageNet pretraining provides useful visual features that may allow it to classify EuroSAT images accurately despite its smaller size.
-- **Expected effect:** We expect fewer parameters and shorter training time while maintaining comparable test accuracy and macro-F1. We will evaluate both models across three random seeds.
+I implemented and evaluated an ImageNet-pretrained ResNet-18 as a smaller
+alternative to the shared ResNet-50 baseline. I trained ResNet-18 on all
+19,440 images in the fixed training partition using seeds 42, 43 and 44.
+I used the same validation and test images, preprocessing and two-stage
+training settings as the baseline. For each seed, I selected the checkpoint
+with the highest validation accuracy and evaluated it on the held-out test set.
+
+**Hypothesis.** ResNet-18 would achieve mean test accuracy within one
+percentage point of the shared ResNet-50 baseline while using fewer
+parameters and taking less time to train.
+
+I recorded test accuracy, macro precision, macro recall, macro F1,
+parameter count and training time. I exported per-seed results, classification
+reports and confusion matrices, and produced a paired accuracy plot and
+statistical comparison using the matching ResNet-50 runs.
+
+**Achieved result.** ResNet-18 achieved 95.74% mean test accuracy versus
+96.64% for ResNet-50, an observed decrease of 0.90 percentage points.
+It used 11.18 million parameters versus 23.53 million, a reduction of 52.5%.
+ResNet-18 took 2.74–2.87 minutes per run. Establishing a training speedup
+requires the baseline timings measured under comparable conditions.
+
+[Part B notebook, results and reproduction instructions](Part%20B/)
+
 ## 5 · Experiments (part of 20 % and 15 %)
 
 - **Design:** The shared baseline used an ImageNet-pretrained ResNet-50 trained on the full training partition (19,440 images). For Part A, the effect of training-data size was evaluated using five proportions of the original training partition: 10%, 30%, 50%, 70% and 90%. The corresponding training sizes were 1,944, 5,832, 9,720, 13,608 and 17,496 images.
