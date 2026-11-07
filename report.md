@@ -97,7 +97,7 @@ Since the paper's learning curve is based on training ResNet-50 from scratch, we
 - **Expected effect:** We expect the pretrained ResNet-50 to achieve strong classification accuracy with smaller training-data proportions, with accuracy improving as more training data becomes available. We also expect the performance difference compared with the paper's scratch-trained learning curve to become smaller at higher training-data proportions. We evaluate the model using three random seeds.
 - **Achieved result:** The ImageNet-pretrained ResNet-50 achieved a mean test accuracy of 90.07% with 10% of the training data, increasing to 96.31% with 90% of the training data, averaged across three random seeds.
   
-### Part B — Model Efficiency and Classification Performance (Ishika Thakur)
+### Part B — Evaluating ResNet-18 as a Smaller Alternative to ResNet-50 
 
 Part B investigated whether a smaller network could retain comparable
 classification accuracy on EuroSAT while reducing model size and training
@@ -105,12 +105,12 @@ time. ResNet-18 was selected because its smaller parameter count reduces
 the size of the model, while ImageNet pretraining provides an established
 starting point for transfer learning.
 
-**Hypothesis.** Under the same data split and training settings,
+**Hypothesis:** Under the same data split and training settings,
 ImageNet-pretrained ResNet-18 would achieve mean test accuracy no more
 than one percentage point below the shared ResNet-50 baseline, while
 using fewer parameters and taking less time to train.
 
-**Implementation and evaluation.** Ishika Thakur adapted the shared
+**Implementation and evaluation:** adapted the shared
 training pipeline to use ResNet-18 with a ten-class output layer. The
 model was trained on the full training partition of 19,440 images using
 seeds 42, 43 and 44. Both models used the same data split, preprocessing
@@ -120,7 +120,7 @@ The Part B contribution also included exporting per-seed metrics and
 confusion matrices, comparing parameter counts, recording training times,
 and producing the paired statistical comparison and figure.
 
-**Achieved result.** ResNet-18 achieved 95.74% mean test accuracy compared
+**Achieved result:** ResNet-18 achieved 95.74% mean test accuracy compared
 with 96.64% for ResNet-50. The observed decrease of 0.90 percentage
 points fell within the one-point target. The parameter count decreased
 from 23.53 million to 11.18 million, a reduction of 52.5%. ResNet-18
