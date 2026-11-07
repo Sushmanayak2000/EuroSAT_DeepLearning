@@ -99,29 +99,35 @@ Since the paper's learning curve is based on training ResNet-50 from scratch, we
   
 ### Part B — Model Efficiency and Classification Performance (Ishika Thakur)
 
-I implemented and evaluated an ImageNet-pretrained ResNet-18 as a smaller
-alternative to the shared ResNet-50 baseline. I trained ResNet-18 on all
-19,440 images in the fixed training partition using seeds 42, 43 and 44.
-I used the same validation and test images, preprocessing and two-stage
-training settings as the baseline. For each seed, I selected the checkpoint
-with the highest validation accuracy and evaluated it on the held-out test set.
+Part B investigated whether a smaller network could retain comparable
+classification accuracy on EuroSAT while reducing model size and training
+time. ResNet-18 was selected because its smaller parameter count reduces
+the size of the model, while ImageNet pretraining provides an established
+starting point for transfer learning.
 
-**Hypothesis.** ResNet-18 would achieve mean test accuracy within one
-percentage point of the shared ResNet-50 baseline while using fewer
-parameters and taking less time to train.
+**Hypothesis.** Under the same data split and training settings,
+ImageNet-pretrained ResNet-18 would achieve mean test accuracy no more
+than one percentage point below the shared ResNet-50 baseline, while
+using fewer parameters and taking less time to train.
 
-I recorded test accuracy, macro precision, macro recall, macro F1,
-parameter count and training time. I exported per-seed results, classification
-reports and confusion matrices, and produced a paired accuracy plot and
-statistical comparison using the matching ResNet-50 runs.
+**Implementation and evaluation.** Ishika Thakur adapted the shared
+training pipeline to use ResNet-18 with a ten-class output layer. The
+model was trained on the full training partition of 19,440 images using
+seeds 42, 43 and 44. Both models used the same data split, preprocessing
+and two-stage training schedule. For each seed, the checkpoint with the
+highest validation accuracy was evaluated on the held-out test set.
+The Part B contribution also included exporting per-seed metrics and
+confusion matrices, comparing parameter counts, recording training times,
+and producing the paired statistical comparison and figure.
 
-**Achieved result.** ResNet-18 achieved 95.74% mean test accuracy versus
-96.64% for ResNet-50, an observed decrease of 0.90 percentage points.
-It used 11.18 million parameters versus 23.53 million, a reduction of 52.5%.
-ResNet-18 took 2.74–2.87 minutes per run. Establishing a training speedup
-requires the baseline timings measured under comparable conditions.
+**Achieved result.** ResNet-18 achieved 95.74% mean test accuracy compared
+with 96.64% for ResNet-50. The observed decrease of 0.90 percentage
+points fell within the one-point target. The parameter count decreased
+from 23.53 million to 11.18 million, a reduction of 52.5%. ResNet-18
+training took 2.74–2.87 minutes per run. Confirming a training speedup
+requires baseline timings measured under comparable conditions.
 
-[Part B notebook, results and reproduction instructions](Part%20B/)
+[Part B notebook and results](Part%20B/)
 
 ## 5 · Experiments (part of 20 % and 15 %)
 
