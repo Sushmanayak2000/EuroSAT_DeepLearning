@@ -206,6 +206,30 @@ Metrics: In addition to test accuracy, macro-precision, macro-recall and macro-F
 Results: The mean test accuracy increased from 90.07% ± 0.43 percentage points with 10% of the training data to 96.31% ± 0.17 percentage points with 90% of the training data. This demonstrates that the ImageNet-pretrained ResNet-50 achieved strong classification performance even with a limited number of labelled training images.
 
 Error analysis: Confusion matrices and classification reports were generated for all five training-data proportions to examine class-wise performance and identify misclassifications.
+**6.3 Part B – ResNet-18 Evaluation and Error Analysis (Ishika Thakur)**
+
+**Metrics and results.** ResNet-18 was evaluated on the same 5,400
+held-out test images as the shared ResNet-50 baseline. Across seeds
+42, 43 and 44, ResNet-18 achieved a mean test accuracy of
+**95.74% ± 0.02 percentage points** (mean ± sample standard deviation),
+compared with **96.64% ± 0.27 percentage points** for ResNet-50.
+ResNet-18 achieved **95.65% macro precision**, **95.52% macro recall**
+and **95.57% macro F1**, averaged across the three runs. The macro
+metrics give equal weight to each of the ten classes.
+
+**Error analysis.** A classification report and confusion matrix were
+saved for each ResNet-18 run. The off-diagonal entries show which
+true classes were predicted as other classes. These matrices allow
+a direct check of whether the smaller model shares the baseline's
+River–Highway confusion and whether the errors occur in both directions.
+
+**Limitations.** The three runs used one fixed data split, so the
+reported spread measures variation across training seeds. Performance
+on geographically separate imagery remains untested. The observed mean
+accuracy loss of 0.90 percentage points fell within the one-point
+target, but the confidence interval in Section 5 includes losses
+larger than one point.
+
 
 ## 7 · Conclusion
 
