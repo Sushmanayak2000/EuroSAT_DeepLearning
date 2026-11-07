@@ -98,7 +98,7 @@ The experiment is repeated using three random seeds to assess the reproducibilit
 The project is divided into two parts:
 
 - **Part A – How Many Labels Do We Need?**: Sushma
-- **Part B – Improvement to the Baseline**: Ishika Thakur
+- **Part B – Evaluating a Smaller Network**: Ishika Thakur
 
 Both team members collaborate on baseline reproduction, dataset preparation, and the final report.
 
