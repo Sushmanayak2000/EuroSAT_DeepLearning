@@ -206,6 +206,8 @@ Metrics: In addition to test accuracy, macro-precision, macro-recall and macro-F
 Results: The mean test accuracy increased from 90.07% ± 0.43 percentage points with 10% of the training data to 96.31% ± 0.17 percentage points with 90% of the training data. This demonstrates that the ImageNet-pretrained ResNet-50 achieved strong classification performance even with a limited number of labelled training images.
 
 Error analysis: Confusion matrices and classification reports were generated for all five training-data proportions to examine class-wise performance and identify misclassifications.
+
+
 **6.3 Part B – ResNet-18 Evaluation and Error Analysis (Ishika Thakur)**
 
 **Metrics and results.** ResNet-18 was evaluated on the same 5,400
