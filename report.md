@@ -260,6 +260,15 @@ Overall, the project provided practical experience in reproducing a published de
 As future work, further experiments could investigate additional data augmentation techniques, alternative training strategies and improved image preprocessing. More random seeds and additional data splits could also provide stronger evidence about the consistency of the results. Further investigation into class-specific errors could help improve the distinction between visually similar land-cover categories while maintaining computational efficiency.
 
 ## 8 · Use of AI tools (5 %)
+
+| Date | What I used ChatGPT for (Part A) |
+| --- | --- |
+| 22 October 2026 | Discussed ideas for improving the baseline and selecting the training-data proportions. |
+| 4 November 2026 | Clarified the experimental setup and how to conduct the experiments using different amounts of training data. |
+| 5 November 2026 | Discussed the results, accuracy calculations, and learning-curve comparison with the original paper. |
+| 7 November 2026 | Reviewed the Part A results, report discussion, and limitations of the comparison with the original paper. |
+
+
 | Date | What I used ChatGPT for ( Part B) |
 | --- | --- |
 | 28 October 2026 | Helped formulate the research question and hypothesis for Part B, which compared an ImageNet-pretrained ResNet-18 with the shared ResNet-50 baseline. |
@@ -267,11 +276,6 @@ As future work, further experiments could investigate additional data augmentati
 | 7 November 2026 | Helped refine the Part B discussion using results from our experiments. We discussed how to report the trade-off between test accuracy and parameter count, and what timing evidence would be needed to claim a training speedup. |
 
 
-ChatGPT (OpenAI) was used occasionally as a supplementary tool during project development, mainly to help troubleshoot coding issues. For example, it was used to understand Python and PyTorch error messages, investigate possible causes of implementation errors, and clarify concepts related to model training and fine-tuning.
-
-When a coding issue occurred, ChatGPT suggestions were considered as possible solutions. Any relevant changes were checked manually, tested in the Jupyter notebooks, and verified by examining whether the code executed correctly and produced the expected outputs. The experimental setup, implementation, model training, evaluation, and interpretation of results were carried out by the project team.
-
-ChatGPT was not used to generate model predictions, experimental results, or evaluation metrics. All reported results were obtained from the actual model experiments.
 
 ## 9 · Reproducibility (part of 25 %)
 
