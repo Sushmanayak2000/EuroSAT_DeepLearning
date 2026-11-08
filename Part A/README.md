@@ -2,11 +2,11 @@
 
 ## 1. Overview
 
-This part of the project investigates the effect of training data availability on EuroSAT land-use and land-cover classification.
+This part of the project investigates how the availability of labelled training data affects EuroSAT land-use and land-cover classification performance.
 
 The main objective is to evaluate how the amount of labelled training data affects the classification performance of an ImageNet-pretrained ResNet-50 model.
 
-The experiment also compares our results with the ResNet-50 learning curve reported in the original EuroSAT research paper.
+The experiment also compares our results with the ResNet-50 learning curve reported in Table II of the original EuroSAT research paper.
 
 ## 2. Individual Contribution
 
@@ -15,15 +15,17 @@ The experiment also compares our results with the ResNet-50 learning curve repor
 
 The individual improvement investigates whether ImageNet pretraining can help a ResNet-50 model achieve strong classification performance when only a limited amount of labelled EuroSAT training data is available.
 
-The original paper's learning curve provides a reference for comparing the effect of training data size. Our experiments use an ImageNet-pretrained ResNet-50 and evaluate its performance across different training-data proportions.
+The original paper's learning curve provides a reference for comparing performance at different training-data sizes. Our experiments use an ImageNet-pretrained ResNet-50 and evaluate its performance across different training-data proportions.
 
-### Research question
+### Research Question
 
 How does the amount of labelled training data affect the classification performance of an ImageNet-pretrained ResNet-50 on the EuroSAT dataset?
 
 ### Hypothesis
 
-We hypothesise that ImageNet-pretrained ResNet-50 will achieve higher classification accuracy with limited EuroSAT training data because it can benefit from visual features learned during pretraining. We also expect the performance difference to become smaller as more training data becomes available.
+We hypothesise that an ImageNet-pretrained ResNet-50 will achieve strong classification performance even with limited EuroSAT training data. We expect classification accuracy to improve as more labelled training data becomes available, with smaller performance gains at higher training-data proportions.
+
+The comparison with the original paper's scratch-trained ResNet-50 learning curve provides an indicative reference, rather than a controlled measurement of the effect of pretraining alone.
 
 ## 3. Dataset
 
@@ -37,7 +39,7 @@ The experiments use the EuroSAT RGB dataset.
 | Image dimensions | 64 × 64 pixels |
 | Input channels | 3 (RGB) |
 
-### Dataset split
+### Dataset Split
 
 A fixed stratified split was used across the experiments.
 
@@ -50,21 +52,34 @@ A fixed stratified split was used across the experiments.
 
 The same validation and test partitions were maintained across all training-data experiments to ensure consistent evaluation.
 
-The shared dataset split and class mapping files are available in the `Baseline` folder.
+The shared dataset split and class mapping are reused from the baseline experiment.
 
 ## 4. Experimental Methodology
 
-### Model architecture
+### Model Architecture
 
-- Architecture: ResNet-50
-- Initialisation: ImageNet-pretrained weights
-- Framework: PyTorch
-- Dataset: EuroSAT RGB
-- Training approach: Two-stage training, consisting of classification-head training followed by full-network fine-tuning.
+- **Architecture:** ResNet-50
+- **Initialisation:** ImageNet-pretrained weights
+- **Framework:** PyTorch
+- **Dataset:** EuroSAT RGB
+- **Training approach:** Two-stage transfer learning, consisting of classification-head training followed by full-network fine-tuning.
 
-### Training-data proportions
+### Training Configuration
 
-Five proportions of the training partition were evaluated:
+| Parameter | Configuration |
+|---|---|
+| Optimiser | AdamW |
+| Batch size | 64 |
+| Classification-head training | 3 epochs |
+| Full-network fine-tuning | 7 epochs |
+| Head learning rate | 0.01 |
+| Fine-tuning learning rate | 0.0001 |
+| Weight decay | 0.0001 |
+| Input normalisation | ImageNet mean and standard deviation |
+
+### Training-Data Proportions
+
+Five proportions of the original training partition were evaluated.
 
 | Training proportion | Number of training images |
 |---|---:|
@@ -82,7 +97,7 @@ Each experiment was repeated using three random seeds:
 
 Therefore, a total of **15 experimental runs** were conducted.
 
-The fixed validation and test sets were used for all experiments.
+Stratified sampling was used to preserve class representation across training subsets. The validation and test sets remained fixed for all experiments.
 
 ## 5. Evaluation Metrics
 
@@ -99,27 +114,27 @@ Mean and standard deviation across the three random seeds were calculated to exa
 
 ## 6. Experimental Results
 
-The following table presents the mean test accuracy across the three random seeds.
+The following table presents the mean test accuracy and standard deviation across the three random seeds.
 
-| Training proportion | Mean test accuracy |
+| Training proportion | Mean test accuracy ± SD |
 |---|---:|
-| 10% | 90.07% |
-| 30% | 94.10% |
-| 50% | 95.02% |
-| 70% | 95.91% |
-| 90% | 96.31% |
+| 10% | 90.07% ± 0.43 pp |
+| 30% | 94.10% ± 0.30 pp |
+| 50% | 95.02% ± 0.32 pp |
+| 70% | 95.91% ± 0.27 pp |
+| 90% | 96.31% ± 0.17 pp |
 
 The results indicate that classification accuracy improves as more labelled training data is provided. The improvements become smaller at higher training-data proportions.
 
 ### Learning Curve and Comparison
 
-The following figure compares our ImageNet-pretrained ResNet-50 with the ResNet-50 trained from scratch reported in the original paper.
+The following figure compares our ImageNet-pretrained ResNet-50 with the scratch-trained ResNet-50 learning curve reported in Table II of the original EuroSAT paper.
 
 ![EuroSAT Learning Curve](Improvement/part_a_learning_curve.png)
 
 The comparison illustrates the performance of the pretrained model across different training-data sizes relative to the original paper's reported learning curve.
 
-The comparison should be interpreted in the context of the respective experimental setups.
+This comparison should be interpreted in the context of the respective experimental setups and data-splitting procedures.
 
 ## 7. Key Findings
 
@@ -141,30 +156,105 @@ The Part A folder contains the following files and directories:
 | `part_a_combined_training_history.csv` | Epoch-wise training history across experimental runs |
 | `part_a_results_summary.csv` | Aggregated experimental results |
 | `part_a_validation_summary.csv` | Validation performance summary |
-| `part_a_test_results.csv` | Final test evaluation results |
-| `Classification_Reports/` | Classification reports for the experimental runs |
+| `part_a_test_results.csv` | Test evaluation results |
+| `Classification_Reports/` | Class-wise classification reports |
 | `Confusion_Matrices/` | Confusion matrix CSV files |
-| `Improvement/` | Description and visualisation of the individual improvement |
+| `Improvement/` | Individual improvement description and learning-curve visualisation |
 
-The shared dataset split and class mapping are maintained in the `Baseline` folder to avoid unnecessary duplication.
+The shared dataset split and class mapping are reused from the shared project files rather than duplicated in Part A.
 
 ## 9. Reproducibility
 
-The main Jupyter notebook documents the implementation, training procedure, evaluation and experimental analysis.
+The experiments were implemented using Python, PyTorch and Google Colab. Google Drive was used for accessing the dataset, shared split files, checkpoints and experiment outputs.
 
-To reproduce the experiments:
+### 9.1 Requirements
 
-1. Clone the project repository.
-2. Install the required dependencies listed in `requirements.txt`.
-3. Make the EuroSAT RGB dataset available.
-4. Ensure the shared dataset split and class mapping files are available.
-5. Run the Part A notebook using the documented experiment configuration.
+The following are required to reproduce the experiments:
 
-The experiments use three random seeds (42, 43 and 44), with the same validation and test partitions across all training-data proportions.
+- Python environment compatible with the versions specified in `requirements.txt`.
+- Google Colab or an equivalent Python environment with GPU support recommended.
+- PyTorch and Torchvision.
+- NumPy and Pandas.
+- Scikit-learn.
+- Matplotlib and Seaborn.
+- Pillow.
+- Google Drive access when using the original notebook configuration.
+- EuroSAT RGB dataset.
+- Shared dataset split file: `eurosat_splits.csv`.
+- Shared class mapping file: `class_to_idx.json`.
+- Repository `requirements.txt` file.
+
+Install the dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 9.2 Required Google Drive Structure
+
+The notebook expects the following directory structure in Google Drive:
+
+```text
+MyDrive/
+└── EuroSAT_Final_Experiments/
+    ├── Shared/
+    │   ├── Dataset/
+    │   │   └── EuroSAT RGB dataset
+    │   └── Dataset_Splits/
+    │       ├── eurosat_splits.csv
+    │       └── class_to_idx.json
+    │
+    ├── Baseline/
+    │   ├── Checkpoints/
+    │   ├── Logs/
+    │   └── Results/
+    │
+    └── Part_A/
+        ├── Checkpoints/
+        ├── Logs/
+        └── Results/
+```
+
+The dataset directory must contain the EuroSAT RGB images organised by their class folders, consistent with the image paths recorded in the split CSV.
+
+The shared split CSV must contain the image paths, class names and split assignments required by the notebook. The class mapping JSON must contain the corresponding class-to-index mapping.
+
+### 9.3 Steps to Reproduce
+
+1. Clone the project repository from GitHub.
+2. Open `Part A/EuroSAT_Part_A_Label_Efficiency.ipynb` in Google Colab.
+3. Install the dependencies using the repository's `requirements.txt`.
+4. Mount Google Drive when prompted by the notebook.
+5. Place the EuroSAT RGB dataset in `Shared/Dataset/` within the expected Google Drive project directory.
+6. Make sure `eurosat_splits.csv` and `class_to_idx.json` are available in `Shared/Dataset_Splits/`.
+7. Ensure the Google Drive project directories are configured according to Section 9.2.
+8. Run the notebook cells in order, starting with the imports and path configuration.
+9. Execute the dataset preparation and training-subset generation cells.
+10. Run the experiments for all five training proportions and three random seeds.
+11. Run the evaluation cells to generate test metrics, classification reports and confusion matrices.
+12. Review the generated result summaries and learning curve.
+
+### 9.4 Reproducibility Configuration
+
+The experiments use the following fixed configuration:
+
+- Training proportions: 10%, 30%, 50%, 70% and 90%.
+- Random seeds: 42, 43 and 44.
+- Fixed training, validation and test partitions.
+- ImageNet-pretrained ResNet-50.
+- Two-stage training with AdamW.
+- Batch size of 64.
+- Three classification-head training epochs and seven full-network fine-tuning epochs.
+
+The best model checkpoint for each experiment is selected using validation accuracy.
+
+The same fixed test set of 5,400 images is used to evaluate each training-data proportion and construct the learning curve. It is not used for training or checkpoint selection.
+
+**Note:** The notebook saves checkpoints, training histories and evaluation outputs in Google Drive. Reproducing the original results requires the same dataset, shared split files, model configuration and random seeds. GPU hardware and software versions may also affect exact reproducibility.
 
 ## 10. Conclusion
 
-Part A evaluates the effect of training data availability on EuroSAT image classification using an ImageNet-pretrained ResNet-50.
+Part A evaluates the effect of training-data availability on EuroSAT image classification using an ImageNet-pretrained ResNet-50.
 
 Across five training-data proportions and three random seeds, the experiments demonstrate that strong classification performance can be achieved even with a reduced amount of labelled training data.
 
