@@ -265,6 +265,8 @@ As future work, further experiments could investigate additional data augmentati
 | 28 October 2026 | Helped formulate the research question and hypothesis for Part B, which compared an ImageNet-pretrained ResNet-18 with the shared ResNet-50 baseline. |
 | 29 October 2026 | Helped clarify how to describe the baseline protocol, including the fixed training, validation, and test split, the use of random seeds, and checkpoint selection based on validation performance. |
 | 7 November 2026 | Helped refine the Part B discussion using results from our experiments. We discussed how to report the trade-off between test accuracy and parameter count, and what timing evidence would be needed to claim a training speedup. |
+
+
 ChatGPT (OpenAI) was used occasionally as a supplementary tool during project development, mainly to help troubleshoot coding issues. For example, it was used to understand Python and PyTorch error messages, investigate possible causes of implementation errors, and clarify concepts related to model training and fine-tuning.
 
 When a coding issue occurred, ChatGPT suggestions were considered as possible solutions. Any relevant changes were checked manually, tested in the Jupyter notebooks, and verified by examining whether the code executed correctly and produced the expected outputs. The experimental setup, implementation, model training, evaluation, and interpretation of results were carried out by the project team.
