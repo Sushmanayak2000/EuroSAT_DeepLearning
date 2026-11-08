@@ -23,8 +23,10 @@ Overall, the experiments demonstrate how training-data availability affects clas
 
 - **Relevance to our project:** This paper provides the reference approach and benchmark for our experiments. We first implemented an ImageNet-pretrained ResNet-50 as the shared baseline and compared its performance with the paper's pretrained ResNet-50 result in Table III. In Part A, we investigated the effect of training-data availability by evaluating the pretrained ResNet-50 using five training-data proportions. We compared these results with the scratch-trained ResNet-50 learning curve reported in Table II. Part B further investigated the use of ResNet-18 as a smaller alternative to ResNet-50.
 
-## 2 · The data 
+## 2 · The data
+
 The experiments use the RGB version of the EuroSAT dataset introduced by Helber et al. (2019). It contains 27,000 labelled satellite image patches covering ten land-use and land-cover classes. Each image has a spatial resolution of 64 × 64 pixels and three RGB channels.
+
 | | |
 |---|---|
 | Source and version | Official EuroSAT RGB dataset from Zenodo: https://zenodo.org/records/7711810. Downloaded for this project |
@@ -38,7 +40,15 @@ The experiments use the RGB version of the EuroSAT dataset introduced by Helber 
 
 The dataset was divided using a stratified random split rather than a geographic or time-based split. The same saved split was used for the baseline and the subsequent experiments to maintain consistency. The validation set was used during model development and checkpoint selection, while the test set was kept separate for final evaluation.
 
-The notebook also includes representative image samples from the ten classes and a class-distribution bar chart. Visual inspection shows that some land-cover categories can be visually similar, which may make classification more challenging. These observations provide context for the error analysis in Section 6.
+![Representative EuroSAT image samples](figures/Representative%20EuroSAT%20image%20samples.png)
+
+*Figure 1. Representative RGB image samples from the ten EuroSAT land-use and land-cover classes.*
+
+
+![EuroSAT class distribution](figures/Class%20distribution.png)
+
+*Figure 2. Distribution of images across the ten EuroSAT land-use and land-cover classes.*
+Visual inspection of the representative samples shows that some land-cover categories can be visually similar, which may make classification more challenging. These observations provide context for the error analysis presented in Section 6.
 
 ## 3 · Reproducing the baseline (part of 15 %, and 25 % implementation)
 
