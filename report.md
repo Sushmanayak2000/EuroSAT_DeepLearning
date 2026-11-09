@@ -220,7 +220,7 @@ Estimating a training speedup requires comparable ResNet-50 timings.
 
 **Limitations:** The experiments show how the ImageNet-pretrained ResNet-50 performs with different amounts of EuroSAT training data. However, the comparison with the paper's scratch-trained model does not isolate the effect of pretraining because the experimental setups differ. The results are also based on three random seeds and one fixed test split.
 
-**6.3 Part B – ResNet-18 Evaluation and Error Analysis (Ishika Thakur)**
+### 6.3 Part B – ResNet-18 Evaluation and Error Analysis (Ishika Thakur)
 
 **Metrics and results.** ResNet-18 was evaluated on the same 5,400
 held-out test images as the shared ResNet-50 baseline. Across seeds
